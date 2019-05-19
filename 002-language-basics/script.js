@@ -175,3 +175,22 @@ const dustin = ['Dustin', 5, 'Dog'];
 console.log(dustin, 'dustin array');
 console.log(dustin.indexOf(5), 'dustin.indexOf(5)');
 console.log(dustin.indexOf('cat'), 'dustin.indexOf(cat)');
+
+/*************************************************
+ * Object and this
+ */
+sectionLog('Object and this');
+
+const dustinObj = {
+  name: 'Dustin',
+  birthYear: '2013',
+  family: ['zag', 'fox', 'ziggy'],
+  job: 'Deer Hunter',
+  isMarried: false,
+  calcAge() {
+    this.age = 2019 - this.birthYear;
+  },
+};
+
+dustinObj.calcAge();
+console.log({ dustinObj });
