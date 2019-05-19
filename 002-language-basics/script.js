@@ -26,14 +26,18 @@ console.log(job);
 console.log(`${firstName} is ${age}, marriage status is ${fullAge}`);
 console.log(age + '16');
 
-// Operators
+/*************************************************
+ * Operators
+ */
 const year = 2018;
 const now = 2018;
 
 const ageJohn = 28;
 const ageMark = 34;
 
-// Math operators
+/*************************************************
+ * Math operators
+ */
 const yearJohn = year - ageJohn;
 const yearMark = year - ageMark;
 
@@ -42,7 +46,9 @@ console.log(yearMark);
 console.log(now + 2);
 console.log(now / 10);
 
-// Logical operators
+/*************************************************
+ * Logical operators
+ */
 const johnOlder = yearJohn < yearMark;
 console.log(johnOlder);
 console.log(typeof johnOlder);
@@ -50,7 +56,9 @@ console.log(typeof yearJohn);
 let z;
 console.log(typeof z);
 
-// Operator precedence
+/*************************************************
+ * Operator precedence
+ */
 const isFullAge = now - yearJohn >= ageJohn;
 console.log(isFullAge);
 
@@ -66,11 +74,39 @@ console.log(x, y);
 x *= 10;
 console.log(x, y);
 
-// If Else
+/*************************************************
+ * if else
+ */
 const civilStatus = 'single';
 
 if (civilStatus === 'married') {
   console.log(`${firstName} is married`);
 } else {
   console.log(`${firstName} will hopefully marry soon`);
+}
+
+/*************************************************
+ * booleans
+ */
+if (fullAge) {
+  console.log('fullAge is true');
+}
+
+/*************************************************
+ * Ternary operator and switch statment
+ */
+fullAge
+  ? console.log('Ternary: fullAge is true')
+  : console.log('Ternary: fullAge is false');
+
+switch (job) {
+  case 'Mechanic':
+    console.log('Job is Mechanic');
+    break;
+  case 'Techher':
+    console.log('Job is Techher');
+    break;
+  default:
+    console.log('Job not supplied');
+    break;
 }
