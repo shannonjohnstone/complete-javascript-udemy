@@ -14,6 +14,13 @@ const determineHihestBMI = (person1, person2) => {
   const one = person1;
   const two = person2;
 
+  if (
+    typeof person1.calculateBMI !== 'function' &&
+    typeof person2.calculateBMI !== 'function'
+  ) {
+    throw new Error('person object missing required propeties');
+  }
+
   one.calculateBMI();
   two.calculateBMI();
 
