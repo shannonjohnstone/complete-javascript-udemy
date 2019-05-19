@@ -1,5 +1,13 @@
 /*eslint no-console: 0*/
 
+const sectionLog = title => {
+  console.log('');
+  console.log('****************************************');
+  console.log(title);
+  console.log('');
+};
+
+sectionLog('Variables');
 const firstName = 'Dustin';
 console.log(firstName);
 
@@ -29,6 +37,7 @@ console.log(age + '16');
 /*************************************************
  * Operators
  */
+sectionLog('Operators');
 const year = 2018;
 const now = 2018;
 
@@ -38,6 +47,7 @@ const ageMark = 34;
 /*************************************************
  * Math operators
  */
+sectionLog('Math operators');
 const yearJohn = year - ageJohn;
 const yearMark = year - ageMark;
 
@@ -49,6 +59,7 @@ console.log(now / 10);
 /*************************************************
  * Logical operators
  */
+sectionLog('Logical operators');
 const johnOlder = yearJohn < yearMark;
 console.log(johnOlder);
 console.log(typeof johnOlder);
@@ -59,6 +70,7 @@ console.log(typeof z);
 /*************************************************
  * Operator precedence
  */
+sectionLog('Operator precedence');
 const isFullAge = now - yearJohn >= ageJohn;
 console.log(isFullAge);
 
@@ -77,6 +89,7 @@ console.log(x, y);
 /*************************************************
  * if else
  */
+sectionLog('if/else');
 const civilStatus = 'single';
 
 if (civilStatus === 'married') {
@@ -88,6 +101,7 @@ if (civilStatus === 'married') {
 /*************************************************
  * booleans
  */
+sectionLog('Boolean');
 if (fullAge) {
   console.log('fullAge is true');
 }
@@ -95,6 +109,7 @@ if (fullAge) {
 /*************************************************
  * Ternary operator and switch statment
  */
+sectionLog('Ternary operator and switch statment');
 fullAge
   ? console.log('Ternary: fullAge is true')
   : console.log('Ternary: fullAge is false');
@@ -110,3 +125,53 @@ switch (job) {
     console.log('Job not supplied');
     break;
 }
+
+/*************************************************
+ * Truthy/Falsy
+ *
+ * falsy: undefined, null, 0, '', NaN
+ * truthy: everythng that is not falsy
+ */
+sectionLog('Truthy/Falsy');
+const checkHeight = height => {
+  if (height || height === 0) console.log('Varible is defined');
+  else console.log('Variable is NOT defined');
+};
+
+let height;
+checkHeight(height);
+height = 0;
+checkHeight(height);
+height = 1;
+checkHeight(height);
+
+/*************************************************
+ * Functions
+ */
+sectionLog('Functions');
+
+function calculateAge(birthYear) {
+  return 2019 - birthYear;
+}
+
+const calculatedAge = calculateAge(1984);
+console.log({ calculatedAge });
+
+/*************************************************
+ * Arrays
+ */
+sectionLog('Arrays');
+
+const names = ['Dustin', 'Zag', 'Barnie'];
+console.log(names, 'names');
+console.log(names.length, 'names length');
+console.log(names[names.length - 1], 'last item in array');
+console.log(names[1], ': names 1');
+console.log(names[1], ': names 1');
+names.push('Ruby');
+console.log(names, 'names');
+
+const dustin = ['Dustin', 5, 'Dog'];
+console.log(dustin, 'dustin array');
+console.log(dustin.indexOf(5), 'dustin.indexOf(5)');
+console.log(dustin.indexOf('cat'), 'dustin.indexOf(cat)');
