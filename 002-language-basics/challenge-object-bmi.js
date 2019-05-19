@@ -6,11 +6,9 @@ const personFactory = opts => ({
   height: opts.height,
   calculateBMI() {
     this.bmi = this.mass / (this.height * this.height);
+    return this.bmi;
   },
 });
-
-const tom = personFactory({ name: 'Tom', mass: 90, height: 190 });
-const ken = personFactory({ name: 'Ken', mass: 60, height: 170 });
 
 const determineHihestBMI = (person1, person2) => {
   const one = person1;
@@ -19,17 +17,17 @@ const determineHihestBMI = (person1, person2) => {
   one.calculateBMI();
   two.calculateBMI();
 
-  if (one.bmi > two.bmi) {
+  const printWinner = winner =>
     console.log({
-      name: one.name,
-      bmi: one.bmi,
+      name: winner.name,
+      bmi: winner.bmi,
     });
-  } else {
-    console.log({
-      name: two.name,
-      bmi: two.bmi,
-    });
-  }
+
+  if (one.bmi > two.bmi) return printWinner(one);
+  return printWinner(two);
 };
 
-determineHihestBMI(tom, ken);
+determineHihestBMI(
+  personFactory({ name: 'Tom', mass: 90, height: 190 }),
+  personFactory({ name: 'Ken', mass: 60, height: 170 }),
+);
