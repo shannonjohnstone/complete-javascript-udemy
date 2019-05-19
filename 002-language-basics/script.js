@@ -1,10 +1,8 @@
 /*eslint no-console: 0*/
 
 const sectionLog = title => {
-  console.log('');
-  console.log('****************************************');
-  console.log(title);
-  console.log('');
+  console.log('\n****************************************');
+  console.log(title, '\n');
 };
 
 sectionLog('Variables');
@@ -194,3 +192,30 @@ const dustinObj = {
 
 dustinObj.calcAge();
 console.log({ dustinObj });
+
+/*************************************************
+ * Loops
+ */
+sectionLog('Loops');
+
+for (let i = 0; i < 10; i++) {
+  console.log(i);
+}
+
+const zag = ['Zag', 2019, 'dog', 'female'];
+
+for (let index = 0; index < zag.length; index++) {
+  if (typeof zag[index] !== 'string') continue;
+  console.log(zag[index]);
+}
+
+for (let index = 0; index < zag.length; index++) {
+  if (typeof zag[index] !== 'string') break;
+  console.log(zag[index]);
+}
+
+// let j = 0;
+// while (j < zag.length) {
+//   console.log(zag[j]);
+//   j++;
+// }
