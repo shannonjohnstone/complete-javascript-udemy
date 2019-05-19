@@ -1,6 +1,6 @@
 /*eslint no-console: 0*/
 
-function calculateTips(billTotal, tipsArray) {
+const calculateTips = cb => billTotal => {
   let percentage;
 
   if (billTotal < 50) {
@@ -12,25 +12,35 @@ function calculateTips(billTotal, tipsArray) {
   }
 
   const total = percentage + billTotal;
-  tipsArray.push(total);
-  return total;
-}
 
-function calculateTotal(billTotal, tip, totalsArray) {
-  const total = billTotal + tip;
-  totalsArray.push(total);
+  if (cb && typeof cb === 'function') cb(total);
   return total;
-}
-
-const calculate = (tips, totals) => total => {
-  const tip = calculateTips(total, tips);
-  calculateTotal(total, tip, totals);
 };
 
-const tips = [];
-const totals = [];
+const calculateTotal = cb => (billTotal, tip) => {
+  const total = billTotal + tip;
+  if (cb && typeof cb === 'function') cb(total);
+  return total;
+};
 
-const run = calculate(tips, totals);
+const calculate = (_calculateTips, _calculateTotals) => total => {
+  const tip = _calculateTips(total);
+  const calculatedTotal = _calculateTotals(total, tip);
+  return calculatedTotal;
+};
+
+let tips = [];
+let totals = [];
+
+const storeTips = v => {
+  tips = [...tips, v];
+};
+
+const storeTotals = v => {
+  totals = [...totals, v];
+};
+
+const run = calculate(calculateTips(storeTips), calculateTotal(storeTotals));
 
 run(20);
 run(400);
