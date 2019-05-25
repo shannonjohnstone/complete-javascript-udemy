@@ -15,29 +15,59 @@ const holdBtn = document.querySelector('.btn-hold');
 const newGameBtn = document.querySelector('.btn-new');
 
 const players = (() => {
-  let activePlayer = 0;
+  let currentPlayer = 0;
 
-  const switchCurrentPlayerClass = activePlayer => {
+  const switchCurrentPlayerClass = currentPlayer => {
     document
-      .querySelector(`.player-${activePlayer}-panel`)
+      .querySelector(`.player-${currentPlayer}-panel`)
       .classList.add('active');
     document
-      .querySelector(`.player-${activePlayer === 0 ? 1 : 0}-panel`)
+      .querySelector(`.player-${currentPlayer === 0 ? 1 : 0}-panel`)
       .classList.remove('active');
   };
 
   return {
     next(player) {
-      activePlayer = player === 0 ? 1 : 0;
-      switchCurrentPlayerClass(activePlayer);
-      return activePlayer;
+      currentPlayer = player === 0 ? 1 : 0;
+      switchCurrentPlayerClass(currentPlayer);
+      return currentPlayer;
     },
     current() {
-      return activePlayer;
+      return currentPlayer;
     },
     reset() {
-      activePlayer = 0;
-      switchCurrentPlayerClass(activePlayer);
+      currentPlayer = 0;
+      switchCurrentPlayerClass(currentPlayer);
+    },
+  };
+})();
+
+/**
+ * check weather the last 2 rolls are both 6
+ * and belong to the same player
+ */
+const spinLog = (() => {
+  let current;
+  let log = [];
+
+  return {
+    check(value, _current) {
+      // limit the array 2
+      log = [value, ...log].slice(0, 2);
+
+      // if more than 1 and is same player
+      if (log.length > 1 && current === _current) {
+        current = _current;
+
+        // use Set to filter down to unquie values
+        const unquie = new Set([...log]);
+
+        // is the unquie array 1 value and matches
+        return unquie.size === 1 && unquie.has(value);
+      }
+
+      current = _current;
+      return false;
     },
   };
 })();
@@ -103,10 +133,10 @@ const diceHelpers = (() => {
 
 const UIHelpers = (() => {
   return {
-    scoreEl(index) {
+    totalScoreEl(index) {
       return document.querySelector(`#score-${index}`);
     },
-    currentEl(index) {
+    currentScoreEl(index) {
       return document.querySelector(`#current-${index}`);
     },
     playerPanelEl(index) {
@@ -116,8 +146,8 @@ const UIHelpers = (() => {
       return document.querySelector(`#name-${index}`);
     },
     reset() {
-      UIHelpers.scoreEl(0).textContent = 0;
-      UIHelpers.scoreEl(1).textContent = 0;
+      UIHelpers.totalScoreEl(0).textContent = 0;
+      UIHelpers.totalScoreEl(1).textContent = 0;
       UIHelpers.nameEl(0).textContent = 'Player 1';
       UIHelpers.nameEl(1).textContent = 'Player 2';
       UIHelpers.playerPanelEl(0).classList.remove('winner');
@@ -126,33 +156,41 @@ const UIHelpers = (() => {
   };
 })();
 
-const init = () => {
-  players.reset();
-  overallScore.reset();
-  roundScore.reset();
-  UIHelpers.reset();
-};
+const runWinner = currentPlayer => {
+  const nameEl = UIHelpers.nameEl(currentPlayer);
+  const playerPanelElWinner = UIHelpers.playerPanelEl(currentPlayer);
+  const playerPanelElLoser = UIHelpers.playerPanelEl(
+    currentPlayer === 0 ? 1 : 0,
+  );
 
-// initialise game on start
-init();
+  nameEl.textContent = 'Winner!';
+  diceHelpers.hide();
+  playerPanelElWinner.classList.add('winner');
+  playerPanelElLoser.classList.remove('active');
+  playerPanelElWinner.classList.add('active');
+
+  rollDiceBtn.removeEventListener('click', roll);
+  holdBtn.removeEventListener('click', hold);
+};
 
 /**
  * roll dice event
  */
 const roll = () => {
-  const activePlayer = players.current();
+  console.log('ROLL');
+  const currentPlayer = players.current();
 
-  const currentEl = UIHelpers.currentEl(activePlayer);
+  const currentScoreEl = UIHelpers.currentScoreEl(currentPlayer);
 
   const value = diceHelpers.spin();
   diceHelpers.setImg(value);
   diceHelpers.show();
 
-  currentEl.textContent = roundScore.set(value);
+  currentScoreEl.textContent = roundScore.set(value);
 
-  if (value === 1) {
+  if (value === 1 || spinLog.check(value, currentPlayer)) {
     roundScore.reset();
-    players.next(activePlayer);
+    players.next(currentPlayer);
   }
 };
 
@@ -161,19 +199,19 @@ const roll = () => {
  */
 const hold = () => {
   // get active player
-  const activePlayer = players.current();
+  const currentPlayer = players.current();
 
   // get score elements
-  const scoreEl = UIHelpers.scoreEl(activePlayer);
-  const currentEl = UIHelpers.currentEl(activePlayer);
+  const totalScoreEl = UIHelpers.totalScoreEl(currentPlayer);
+  const currentScoreEl = UIHelpers.currentScoreEl(currentPlayer);
 
-  const score = overallScore.setPlayerScore(roundScore.get(), activePlayer);
+  const score = overallScore.setPlayerScore(roundScore.get(), currentPlayer);
 
-  // set UI elements
-  scoreEl.textContent = score;
+  // set total score UI
+  totalScoreEl.textContent = score;
 
   // reset current rendered score
-  currentEl.textContent = 0;
+  currentScoreEl.textContent = 0;
 
   // hide dice
   diceHelpers.hide();
@@ -181,26 +219,23 @@ const hold = () => {
   // reset round score
   roundScore.reset();
 
-  if (overallScore.getPlayerScore(activePlayer) >= 10) {
-    const nameEl = UIHelpers.nameEl(activePlayer);
-    const playerPanelElWinner = UIHelpers.playerPanelEl(activePlayer);
-    const playerPanelElLoser = UIHelpers.playerPanelEl(
-      activePlayer === 0 ? 1 : 0,
-    );
-
-    nameEl.textContent = 'Winner!';
-    diceHelpers.hide();
-    playerPanelElWinner.classList.add('winner');
-    playerPanelElLoser.classList.remove('active');
-    playerPanelElWinner.classList.add('active');
-
-    rollDiceBtn.removeEventListener('click', roll);
-    holdBtn.removeEventListener('click', hold);
+  if (overallScore.getPlayerScore(currentPlayer) >= 10) {
+    runWinner(currentPlayer);
   } else {
-    players.next(activePlayer);
+    players.next(currentPlayer);
   }
 };
 
-rollDiceBtn.addEventListener('click', roll);
-holdBtn.addEventListener('click', hold);
-newGameBtn.addEventListener('click', init);
+const init = () => {
+  players.reset();
+  overallScore.reset();
+  roundScore.reset();
+  UIHelpers.reset();
+
+  rollDiceBtn.addEventListener('click', roll);
+  holdBtn.addEventListener('click', hold);
+  newGameBtn.addEventListener('click', init);
+};
+
+// initialise game on start
+init();
