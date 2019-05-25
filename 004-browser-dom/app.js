@@ -131,31 +131,34 @@ const diceHelpers = (() => {
   };
 })();
 
-const UIHelpers = (() => {
-  return {
-    totalScoreEl(index) {
-      return document.querySelector(`#score-${index}`);
-    },
-    currentScoreEl(index) {
-      return document.querySelector(`#current-${index}`);
-    },
-    playerPanelEl(index) {
-      return document.querySelector(`.player-${index}-panel`);
-    },
-    nameEl(index) {
-      return document.querySelector(`#name-${index}`);
-    },
-    reset() {
-      UIHelpers.totalScoreEl(0).textContent = 0;
-      UIHelpers.totalScoreEl(1).textContent = 0;
-      UIHelpers.nameEl(0).textContent = 'Player 1';
-      UIHelpers.nameEl(1).textContent = 'Player 2';
-      UIHelpers.playerPanelEl(0).classList.remove('winner');
-      UIHelpers.playerPanelEl(1).classList.remove('winner');
-    },
-  };
-})();
+const UIHelpers = {
+  totalScoreEl(index) {
+    return document.querySelector(`#score-${index}`);
+  },
+  currentScoreEl(index) {
+    return document.querySelector(`#current-${index}`);
+  },
+  playerPanelEl(index) {
+    return document.querySelector(`.player-${index}-panel`);
+  },
+  nameEl(index) {
+    return document.querySelector(`#name-${index}`);
+  },
+  reset() {
+    UIHelpers.totalScoreEl(0).textContent = 0;
+    UIHelpers.totalScoreEl(1).textContent = 0;
+    UIHelpers.nameEl(0).textContent = 'Player 1';
+    UIHelpers.nameEl(1).textContent = 'Player 2';
+    UIHelpers.playerPanelEl(0).classList.remove('winner');
+    UIHelpers.playerPanelEl(1).classList.remove('winner');
+  },
+};
 
+/**
+ * runWinner
+ * helper for setting winner
+ * @param {number} currentPlayer
+ */
 const runWinner = currentPlayer => {
   const nameEl = UIHelpers.nameEl(currentPlayer);
   const playerPanelElWinner = UIHelpers.playerPanelEl(currentPlayer);
@@ -177,7 +180,6 @@ const runWinner = currentPlayer => {
  * roll dice event
  */
 const roll = () => {
-  console.log('ROLL');
   const currentPlayer = players.current();
 
   const currentScoreEl = UIHelpers.currentScoreEl(currentPlayer);
