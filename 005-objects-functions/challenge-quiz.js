@@ -1,3 +1,16 @@
+const data = [
+  {
+    question: 'What color is the sky',
+    answers: ['blue', 'red', 'orange'],
+    answer: 0,
+  },
+  {
+    question: 'What color is the sun',
+    answers: ['blue', 'yellow', 'orange'],
+    answer: 1,
+  },
+];
+
 (questionData => {
   /*eslint no-console: 0*/
 
@@ -37,17 +50,5 @@
     const result = question.check(answer);
     score += result ? 1 : 0;
   }
-
   console.log({ score });
-})([
-  {
-    question: 'What color is the sky',
-    answers: ['blue', 'red', 'orange'],
-    answer: 0,
-  },
-  {
-    question: 'What color is the sun',
-    answers: ['blue', 'yellow', 'orange'],
-    answer: 1,
-  },
-]);
+})(data);
