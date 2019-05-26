@@ -3,7 +3,7 @@
 /* GAME RULES:
  * - The game has 2 players, playing in rounds
  * - In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
- * - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
+ * - BUT, if the player rolls a 1 or two 6 rolls in a row, all his ROUND score gets lost. After that, it's the next player's turn
  * - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
  * - The first player to reach 100 points on GLOBAL score wins the game
  */
@@ -48,26 +48,18 @@ const players = (() => {
  */
 const spinLog = (() => {
   let current;
-  let log = [];
+  let prev;
 
   return {
     check(value, _current) {
-      // limit the array 2
-      log = [value, ...log].slice(0, 2);
-
-      // if more than 1 and is same player
-      if (log.length > 1 && current === _current) {
-        current = _current;
-
-        // use Set to filter down to unquie values
-        const unquie = new Set([...log]);
-
-        // is the unquie array 1 value and matches
-        return unquie.size === 1 && unquie.has(value);
+      let result = false;
+      if (current === _current && value === prev && value === 6) {
+        result = true;
       }
 
+      prev = value;
       current = _current;
-      return false;
+      return result;
     },
   };
 })();
