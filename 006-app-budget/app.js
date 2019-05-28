@@ -35,23 +35,36 @@ const UIController = (() => {
 })();
 
 const controller = ((budgetCtrl, UICtrl) => {
-  const DOM = UICtrl.getDOMStrings();
-
   const contolAddItem = function() {
     const input = UICtrl.getInput();
     console.log(input);
-
-    /**
-     * - get field input data
-     * - add new item to budget controller
-     * - add item to UI
-     * - calculate budget
-     * - display the budget on UI
-     */
   };
 
-  const controlOnEnter = compose(when(enterPressed, contolAddItem));
+  const setupEventListeners = () => {
+    const DOM = UICtrl.getDOMStrings();
 
-  document.querySelector(DOM.inputBtn).addEventListener('click', contolAddItem);
-  document.addEventListener('keypress', controlOnEnter);
+    const controlOnEnter = compose(when(enterPressed, contolAddItem));
+
+    document
+      .querySelector(DOM.inputBtn)
+      .addEventListener('click', contolAddItem);
+
+    document.addEventListener('keypress', controlOnEnter);
+  };
+
+  /**
+   * - get field input data
+   * - add new item to budget controller
+   * - add item to UI
+   * - calculate budget
+   * - display the budget on UI
+   */
+  return {
+    init: () => {
+      console.log('Application has started');
+      setupEventListeners();
+    },
+  };
 })(budgetController, UIController);
+
+controller.init();
