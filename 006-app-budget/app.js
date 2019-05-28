@@ -4,13 +4,54 @@ const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
 const getElement = v => document.querySelector(v);
 
 const budgetController = (() => {
-  const x = 10;
-  const add = a => x + a;
+  const Expense = function(id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
+
+  const Income = function(id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
+
+  const data = {
+    allItems: {
+      exp: [],
+      inc: [],
+    },
+    totals: {
+      exp: [],
+      inc: [],
+    },
+  };
 
   return {
-    publicTest: a => {
-      const result = add(a);
-      return result;
+    // add new item public method
+    addItem: (type, des, val) => {
+      let newItem;
+
+      // all items for a specific type
+      const allItems = data.allItems[type];
+
+      // generate ID base on what already exists
+      const ID = allItems[allItems.length - 1].id + 1;
+
+      // create type
+      if (type === 'exp') {
+        newItem = new Expense(ID, des, val);
+      } else if (type === 'inc') {
+        newItem = new Income(ID, des, val);
+      }
+
+      // push created type to data
+      allItems.push(newItem);
+    },
+    // get types public method
+    getBudgetTypes: {
+      EXP: 'exp',
+      INC: 'inc',
     },
   };
 })();
