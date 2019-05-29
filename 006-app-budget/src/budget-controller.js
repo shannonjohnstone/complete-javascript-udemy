@@ -63,6 +63,12 @@ const budgetController = (() => {
       data.budget = getTotals['inc'] - getTotals['exp'];
       data.percentage = Math.round((getTotals['exp'] / getTotals['inc']) * 100);
     },
+    deleteItem: (type, id) => {
+      getAllItems[type] = getAllItems[type].filter(
+        item => parseInt(item.id) !== parseInt(id),
+      );
+      return id;
+    },
     getBudget: () => {
       const { totals, budget, percentage } = data;
       return { totals, budget, percentage };

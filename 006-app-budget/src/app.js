@@ -1,16 +1,25 @@
+/*eslint no-undef: 0 */
+
 import * as helpers from './helpers';
 import UIController from './ui-controller';
 import budgetController from './budget-controller';
 
+global.testing = budgetController.testing;
 /**
  * App Controller
  */
 const controller = ((budgetCtrl, UICtrl) => {
-  const updateBudget = () => {
-    budgetCtrl.calculateTotals();
-    const budget = budgetCtrl.getBudget();
+  const composeWithUpdate = (...fns) => {
+    const updateBudget = () => {
+      budgetCtrl.calculateTotals();
+      const budget = budgetCtrl.getBudget();
+      UICtrl.displayTotals(budget);
+    };
 
-    UICtrl.displayTotals(budget);
+    return helpers.compose(
+      updateBudget,
+      ...fns,
+    );
   };
 
   const contolAddItem = function() {
@@ -23,8 +32,16 @@ const controller = ((budgetCtrl, UICtrl) => {
         input.value,
       );
       UICtrl.addListItem(newItem, input.type);
-      updateBudget();
       UICtrl.clearFields();
+    }
+  };
+
+  const ctrlDeleteItem = e => {
+    const itemId = e.target.parentNode.parentNode.parentNode.parentNode.id;
+    if (itemId) {
+      const item = itemId.split('-');
+      budgetCtrl.deleteItem(item[0], item[1]);
+      UICtrl.deleteListItem(itemId);
     }
   };
 
@@ -32,11 +49,20 @@ const controller = ((budgetCtrl, UICtrl) => {
     const DOM = UICtrl.getDOMStrings();
 
     // events for adding items
-    helpers.getElement(DOM.inputBtn).addEventListener('click', contolAddItem);
+    helpers
+      .getElement(DOM.inputBtn)
+      .addEventListener('click', composeWithUpdate(contolAddItem));
+
     document.addEventListener(
       'keypress',
-      helpers.compose(helpers.when(helpers.enterIsPressed, contolAddItem)),
+      helpers.compose(
+        helpers.when(helpers.enterIsPressed, composeWithUpdate(contolAddItem)),
+      ),
     );
+
+    helpers
+      .getElement(DOM.container)
+      .addEventListener('click', composeWithUpdate(ctrlDeleteItem));
   };
 
   /**
@@ -48,7 +74,7 @@ const controller = ((budgetCtrl, UICtrl) => {
    */
   return {
     init: () => {
-      console.log('Application has started');
+      console.log('Application has started'); // eslint-disable-line
       UICtrl.displayTotals(budgetCtrl.getBudget());
       setupEventListeners();
     },

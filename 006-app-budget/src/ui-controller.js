@@ -15,11 +15,12 @@ const UIController = (() => {
     budgetExpensesDisplay: '.budget__expenses--value',
     budgetTotal: '.budget__value',
     percentage: '.budget__expenses--percentage',
+    container: '.container',
   };
 
   const HTML = {
     inc: ({ id, description, value }) => {
-      return `<div class="item clearfix" id="income-${id}">
+      return `<div class="item clearfix" id="inc-${id}">
             <div class="item__description">${description}</div>
             <div class="right clearfix">
                 <div class="item__value">+ ${value}</div>
@@ -30,7 +31,7 @@ const UIController = (() => {
         </div>`;
     },
     exp: ({ id, description, value }) => {
-      return `<div class="item clearfix" id="expense-${id}">
+      return `<div class="item clearfix" id="exp-${id}">
           <div class="item__description">${description}</div>
           <div class="right clearfix">
               <div class="item__value">- ${value}</div>
@@ -58,6 +59,10 @@ const UIController = (() => {
       return helpers
         .getElement(listClass)
         .insertAdjacentHTML('beforeend', HTML[type](data));
+    },
+    deleteListItem: id => {
+      const child = document.getElementById(id);
+      child.parentNode.removeChild(child);
     },
     clearFields: () => {
       // get requiered fields

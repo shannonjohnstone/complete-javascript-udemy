@@ -1,5 +1,7 @@
 # Misc
 resource-repo/
+dist/
+.cache/
 
 # Logs
 logs
