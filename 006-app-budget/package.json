@@ -1,0 +1,19 @@
+{
+  "name": "006-app-budget",
+  "version": "1.0.0",
+  "description": "Budget application",
+  "main": "app.js",
+  "scripts": {
+    "babel": "babel src --watch --out-file app.js",
+    "dev": "parcel index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "babel-preset-env": "^1.7.0",
+    "parcel-bundler": "^1.12.3"
+  }
+}
