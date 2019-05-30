@@ -15,6 +15,7 @@ const UIController = (() => {
     budgetExpensesDisplay: '.budget__expenses--value',
     budgetTotal: '.budget__value',
     percentage: '.budget__expenses--percentage',
+    percentageItem: '.item__percentage',
     container: '.container',
   };
 
@@ -23,7 +24,7 @@ const UIController = (() => {
       return `<div class="item clearfix" id="inc-${id}">
             <div class="item__description">${description}</div>
             <div class="right clearfix">
-                <div class="item__value">+ ${value}</div>
+                <div class="item__value">${value}</div>
                 <div class="item__delete">
                     <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
                 </div>
@@ -34,7 +35,7 @@ const UIController = (() => {
       return `<div class="item clearfix" id="exp-${id}">
           <div class="item__description">${description}</div>
           <div class="right clearfix">
-              <div class="item__value">- ${value}</div>
+              <div class="item__value">${value}</div>
               <div class="item__percentage">21%</div>
               <div class="item__delete">
                   <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
@@ -42,6 +43,19 @@ const UIController = (() => {
           </div>
       </div>`;
     },
+  };
+
+  const formatPrice = (num, type) => {
+    let _num = Math.abs(num).toFixed(2);
+    let _numSplit = _num.split('.');
+    let int = _numSplit[0];
+    if (int.length > 3) {
+      int = `${int.substr(0, int.length - 3)},${int.substr(int.length - 3, 3)}`;
+    }
+
+    let dec = _numSplit[1];
+
+    return `${type === 'exp' ? '-' : '+'} ${int}.${dec}`;
   };
 
   return {
@@ -58,7 +72,10 @@ const UIController = (() => {
       // insert expense/income HTML
       return helpers
         .getElement(listClass)
-        .insertAdjacentHTML('beforeend', HTML[type](data));
+        .insertAdjacentHTML(
+          'beforeend',
+          HTML[type]({ ...data, value: formatPrice(data.value) }),
+        );
     },
     deleteListItem: id => {
       const child = document.getElementById(id);
@@ -76,12 +93,6 @@ const UIController = (() => {
       fieldsArray[0].focus();
     },
     displayTotals: budget => {
-      const resolveBudgetSymbol = budget => {
-        let symbol = '';
-        if (budget) symbol = budget > 0 ? '+' : '-';
-        return `${symbol} ${budget}`;
-      };
-
       const resolvePercentage = percentage => {
         if (percentage) return `${percentage}%`;
         return '---';
@@ -92,13 +103,22 @@ const UIController = (() => {
       helpers.getElement(DOMStrings.budgetExpensesDisplay).textContent =
         budget.totals.exp;
 
-      helpers.getElement(
-        DOMStrings.budgetTotal,
-      ).textContent = resolveBudgetSymbol(budget.budget);
+      helpers.getElement(DOMStrings.budgetTotal).textContent = formatPrice(
+        budget.budget,
+      );
 
       helpers.getElement(DOMStrings.percentage).textContent = resolvePercentage(
         budget.percentage,
       );
+    },
+    displayPercentages: percentages => {
+      const fields = Array.from(
+        helpers.getElementAll(DOMStrings.percentageItem),
+      );
+
+      fields.forEach((current, i) => {
+        current.textContent = percentages[i] > 0 ? `${percentages[i]}%` : '---';
+      });
     },
     getDOMStrings: () => DOMStrings,
   };

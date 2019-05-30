@@ -6,6 +6,19 @@ const budgetController = (() => {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
+  };
+
+  Expense.prototype.calcPercentage = function(totalIncome) {
+    if (totalIncome > 0) {
+      const value = parseFloat(this.value);
+      const income = parseFloat(totalIncome);
+      this.percentage = Math.round((value / income) * 100);
+    }
+  };
+
+  Expense.prototype.getPercentage = function() {
+    return this.percentage;
   };
 
   const Income = function(id, description, value) {
@@ -56,16 +69,25 @@ const budgetController = (() => {
       const { inc, exp } = getAllItems;
 
       const calc = (arr, key) =>
-        arr.reduce((val, item) => parseInt(item[key]) + parseInt(val), 0);
+        arr.reduce((val, item) => parseFloat(item[key]) + parseFloat(val), 0);
 
       getTotals['exp'] = calc(exp, 'value');
       getTotals['inc'] = calc(inc, 'value');
       data.budget = getTotals['inc'] - getTotals['exp'];
       data.percentage = Math.round((getTotals['exp'] / getTotals['inc']) * 100);
     },
+    calculatePercentage: () => {
+      getAllItems.exp.forEach(current => current.calcPercentage(getTotals.inc));
+    },
+    getPercentage: () => {
+      const allPercentages = getAllItems.exp.map(current =>
+        current.getPercentage(),
+      );
+      return allPercentages;
+    },
     deleteItem: (type, id) => {
       getAllItems[type] = getAllItems[type].filter(
-        item => parseInt(item.id) !== parseInt(id),
+        item => parseFloat(item.id) !== parseFloat(id),
       );
       return id;
     },

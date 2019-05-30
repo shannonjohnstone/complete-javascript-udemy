@@ -29,15 +29,7 @@ const controller = ((budgetCtrl, UICtrl) => {
     helpers.getElement(DOM.inputBtn).addEventListener('click', contolAddItem);
     document.addEventListener('keypress', helpers.compose(helpers.when(helpers.enterIsPressed, contolAddItem)));
   };
-  /**
-   * - get field input data
-   * - add new item to budget controller
-   * - add item to UI
-   * - calculate budget
-   * - display the budget on UI
-   */
-
-
+  
   return {
     init: () => {
       console.log('Application has started');
@@ -104,7 +96,7 @@ const budgetController = (() => {
         exp
       } = getAllItems;
 
-      const calc = (arr, key) => arr.reduce((val, item) => parseInt(item[key]) + parseInt(val), 0);
+      const calc = (arr, key) => arr.reduce((val, item) => parseFloat(item[key]) + parseFloat(val), 0);
 
       getTotals['exp'] = calc(exp, 'value');
       getTotals['inc'] = calc(inc, 'value');

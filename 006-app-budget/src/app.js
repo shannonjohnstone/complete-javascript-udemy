@@ -16,7 +16,14 @@ const controller = ((budgetCtrl, UICtrl) => {
       UICtrl.displayTotals(budget);
     };
 
+    const updatePercentages = () => {
+      budgetCtrl.calculatePercentage();
+      const per = budgetCtrl.getPercentage();
+      UICtrl.displayPercentages(per);
+    };
+
     return helpers.compose(
+      updatePercentages,
       updateBudget,
       ...fns,
     );
@@ -65,13 +72,6 @@ const controller = ((budgetCtrl, UICtrl) => {
       .addEventListener('click', composeWithUpdate(ctrlDeleteItem));
   };
 
-  /**
-   * - get field input data
-   * - add new item to budget controller
-   * - add item to UI
-   * - calculate budget
-   * - display the budget on UI
-   */
   return {
     init: () => {
       console.log('Application has started'); // eslint-disable-line
