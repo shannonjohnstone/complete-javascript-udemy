@@ -70,12 +70,21 @@ const controller = ((budgetCtrl, UICtrl) => {
     helpers
       .getElement(DOM.container)
       .addEventListener('click', composeWithUpdate(ctrlDeleteItem));
+
+    /**
+     * event for listening to input type selection dropdown this will fire a function
+     * this will toggle classes and update colors
+     */
+    helpers
+      .getElement(DOM.inputType)
+      .addEventListener('change', UICtrl.changeType);
   };
 
   return {
     init: () => {
       console.log('Application has started'); // eslint-disable-line
       UICtrl.displayTotals(budgetCtrl.getBudget());
+      UICtrl.displayMoth();
       setupEventListeners();
     },
   };

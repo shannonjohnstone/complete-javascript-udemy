@@ -17,6 +17,7 @@ const UIController = (() => {
     percentage: '.budget__expenses--percentage',
     percentageItem: '.item__percentage',
     container: '.container',
+    monthDisplay: '.budget__title--month',
   };
 
   const HTML = {
@@ -74,7 +75,7 @@ const UIController = (() => {
         .getElement(listClass)
         .insertAdjacentHTML(
           'beforeend',
-          HTML[type]({ ...data, value: formatPrice(data.value) }),
+          HTML[type]({ ...data, value: formatPrice(data.value, type) }),
         );
     },
     deleteListItem: id => {
@@ -92,23 +93,26 @@ const UIController = (() => {
 
       fieldsArray[0].focus();
     },
-    displayTotals: budget => {
+    displayTotals: budgetData => {
       const resolvePercentage = percentage => {
         if (percentage) return `${percentage}%`;
         return '---';
       };
 
+      const type = budgetData.budget > 0 ? 'inc' : 'exp';
+
       helpers.getElement(DOMStrings.budgetIncomeDisplay).textContent =
-        budget.totals.inc;
+        budgetData.totals.inc;
       helpers.getElement(DOMStrings.budgetExpensesDisplay).textContent =
-        budget.totals.exp;
+        budgetData.totals.exp;
 
       helpers.getElement(DOMStrings.budgetTotal).textContent = formatPrice(
-        budget.budget,
+        budgetData.budget,
+        type,
       );
 
       helpers.getElement(DOMStrings.percentage).textContent = resolvePercentage(
-        budget.percentage,
+        budgetData.percentage,
       );
     },
     displayPercentages: percentages => {
@@ -119,6 +123,43 @@ const UIController = (() => {
       fields.forEach((current, i) => {
         current.textContent = percentages[i] > 0 ? `${percentages[i]}%` : '---';
       });
+    },
+    displayMoth: () => {
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+      const now = new Date();
+      const month = now.getMonth();
+      const year = now.getFullYear();
+      helpers.getElement(DOMStrings.monthDisplay).textContent = `${
+        months[month]
+      }, ${year}`;
+    },
+    /**
+     * changeType
+     * fetches input fields
+     * toggles classes on and off
+     */
+    changeType: () => {
+      const fields = helpers.getElementAll(
+        DOMStrings.inputType,
+        DOMStrings.inputDescription,
+        DOMStrings.inputValue,
+      );
+
+      fields.forEach(current => current.classList.toggle('red-focus'));
+      helpers.getElement(DOMStrings.inputBtn).classList.toggle('red');
     },
     getDOMStrings: () => DOMStrings,
   };
