@@ -103,3 +103,108 @@ box5.clickMe();
   console.log(dan);
   console.log(ken);
 })();
+
+(() => {
+  console.log('Maps');
+  const question = new Map();
+
+  question.set(
+    'question',
+    'What is the name of the latest major JavaScript version?',
+  );
+  question.set(1, 'ES5');
+  question.set(2, 'ES6');
+  question.set(3, 'ES2015');
+  question.set(4, 'ES7');
+  question.set('correct', 3);
+  question.set(true, 'Correct answer');
+  question.set(false, 'Wrong, please try again');
+  console.log(question);
+})();
+
+(() => {
+  console.log('Classes');
+
+  class Person {
+    constructor(firstName, yearOfBirth, job) {
+      this.firstName = firstName;
+      this.yearOfBirth = yearOfBirth;
+      this.job = job;
+    }
+    calcAge() {
+      const age = new Date().getFullYear - this.yearOfBirth;
+      console.log({ age });
+    }
+    static greeting() {
+      console.log(`Hey there, my name is ${this.firstName}`);
+    }
+  }
+
+  const zag = new Person('Zag', 2019, 'Deer Hunter');
+  console.log(zag);
+  zag.calcAge();
+  Person.greeting();
+})();
+
+(() => {
+  console.log('Class/subclasses ES5');
+
+  function Person(name, yearOfBirth, job) {
+    console.log(name, '@@ person');
+    this.name = name;
+    this.yearOfBirth = yearOfBirth;
+    this.job = job;
+  }
+
+  Person.prototype.calculateAge = function() {
+    const age = new Date.getFullYear() - this.yearOfBirth;
+    console.log(age);
+  };
+
+  const Athlete = function(name, yearOfBirth, job, olympicGames, medals) {
+    // function constructors, create a new object and bind the this context
+    // doing Person.call(this, name, yearOfBirth, job); will pass the newly created `this` context
+    // from Athlete into Person
+    Person.call(this, name, yearOfBirth, job);
+    this.olympicGames = olympicGames;
+    this.medals = medals;
+  };
+
+  // this attaches the Person prototype chain to Athlete
+  Athlete.prototype = Object.create(Person.prototype);
+
+  const runner = new Athlete('Bolt', 1990, 'Runner', [200], ['gold']);
+  console.log(runner);
+})();
+
+(() => {
+  console.log('Classes/subclasses ES6');
+
+  class Person {
+    constructor(firstName, yearOfBirth, job) {
+      this.firstName = firstName;
+      this.yearOfBirth = yearOfBirth;
+      this.job = job;
+    }
+    calcAge() {
+      const age = new Date().getFullYear - this.yearOfBirth;
+      console.log({ age });
+    }
+    static greeting() {
+      console.log(`Hey there, my name is ${this.firstName}`);
+    }
+  }
+
+  const zag = new Person('Zag', 2019, 'Deer Hunter');
+
+  class Athlete extends Person {
+    constructor(name, yearOfBirth, job, olympicGames, medals) {
+      super(name, yearOfBirth, job);
+      this.olympicGames = olympicGames;
+      this.medals = medals;
+    }
+  }
+
+  const kathy = new Athlete('Kathy', 1970, 'Spinter', 'Sydney', 1);
+  console.log(kathy);
+})();
