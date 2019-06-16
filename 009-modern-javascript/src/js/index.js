@@ -1,21 +1,32 @@
 // Global app controller
-import axios from 'axios';
 
-async function getResults(query) {
-  // const API_KEY = 'dcaa1bfe8797a1e7dfddf5adcbe72560';
-  const API_KEY = 'XXXdcaa1bfe8797a1e7dfddf5adcbe72560';
-  const PROXY = 'https://cors-anywhere.herokuapp.com/';
-  try {
-    const res = await axios(
-      `${PROXY}https://www.food2fork.com/api/search?key=${API_KEY}&q=${query}`,
-    );
-    console.log(res.data.recipes);
-  } catch (error) {
-    if (error.response) {
-      throw new Error(error.data);
-    }
-    throw new Error('Unauthorised');
+/* eslint no-undef: 0 */
+/* eslint no-console: 0 */
+
+import Search from './models/Search';
+
+// basic state managment object
+const state = {};
+
+/**
+ * controlSearch
+ *
+ * function used to invoke search
+ */
+const controlSearch = async search => {
+  if (!search.getResults) throw new Error('Search Module Required');
+
+  await search.getResults();
+  return search.results;
+};
+
+// events
+document.querySelector('.search').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const searchQuery = document.querySelector('.search__field').value;
+  if (searchQuery) {
+    const res = await controlSearch(new Search(searchQuery));
+    console.log(res);
   }
-}
-
-getResults('ramen');
+});
