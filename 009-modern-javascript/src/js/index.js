@@ -5,7 +5,7 @@
 
 import Search from './models/Search';
 import * as searchView from './views/searchView';
-import { elements } from './views/base';
+import { elements, elementStrings, loader } from './views/base';
 
 // basic state managment object
 const state = {};
@@ -20,7 +20,10 @@ const controlSearch = async search => {
   if (!search.getResults) throw new Error('Search Module Required');
 
   searchView.clearInput();
+  loader.init(elements.searchRes, 'loader');
+  loader.renderLoader();
   await search.getResults();
+  loader.clearLoader();
 
   return search.results;
 };

@@ -57,7 +57,7 @@ export default class Search {
   }
   async getResults() {
     try {
-      this.results = request(true, data)(this.query);
+      this.results = await request(true, data)(this.query);
     } catch (error) {
       console.log(error);
       if (error.response) {
