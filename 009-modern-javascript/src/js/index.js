@@ -4,7 +4,9 @@
 /* eslint no-console: 0 */
 
 import Search from './models/Search';
-import * as searchView from './views/searchView';
+import Recipe from './models/Recipe';
+import searchView from './views/searchView';
+import recipeView from './views/recipeView';
 import { elements, elementStrings, loader } from './views/base';
 
 // basic state managment object
@@ -47,3 +49,20 @@ elements.searchResPages.addEventListener('click', el => {
     searchView.renderResults(state.results, parseInt(button.dataset.goto));
   }
 });
+
+['hashchange', 'load'].forEach(event =>
+  window.addEventListener(event, async () => {
+    const id = window.location.hash.replace('#', '');
+    if (id) {
+      const recipe = new Recipe(id);
+
+      try {
+        await recipe.fetchRecipe(id);
+        recipeView.clear();
+        recipeView.render(recipe.item);
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+  }),
+);
