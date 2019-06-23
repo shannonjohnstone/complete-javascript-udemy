@@ -1,18 +1,23 @@
 import { elements } from './base';
 
 export default (elements => {
-  const updateIngredientsList = ingredients => {
+  const formatCount = number => {
+    return number % 1 !== 0 ? number.toFixed(1) : number;
+  };
+
+  const updateIngredientsList = (ingredients = []) => {
     const items = ingredients.map(item => {
       const markup = `
-            <li class="recipe__item">
-                <svg class="recipe__icon">
-                    <use href="img/icons.svg#icon-check"></use>
-                </svg>
-                <div class="recipe__ingredient">
-                    <span class="recipe__unit">cup</span>
-                    ${item}
-                </div>
-            </li>`;
+      <li class="recipe__item">
+            <svg class="recipe__icon">
+                <use href="img/icons.svg#icon-check"></use>
+            </svg>
+            <div class="recipe__count">${formatCount(item.count)}</div>
+            <div class="recipe__ingredient">
+                <span class="recipe__unit">${item.unit}</span>
+                ${item.ingredient}
+            </div>
+        </li>`;
       return markup;
     });
 

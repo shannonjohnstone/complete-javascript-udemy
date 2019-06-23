@@ -8,9 +8,7 @@ const renderRecipes = (element => {
   return recipe => {
     const markup = `
       <li>
-          <a class="results__link results__link--active" href="#${
-            recipe.recipe_id
-          }">
+          <a class="results__link" href="#${recipe.recipe_id}">
               <figure class="results__fig">
                   <img src="${recipe.image_url}" alt="Test">
               </figure>
@@ -69,9 +67,19 @@ const buttons = (elements => {
   };
 })(elements);
 
-export default ((elements, buttons) => ({
+export default ((document, elements, buttons) => ({
   getInput: () => elements.searchField.value,
+  highlightSelected: id => {
+    if (id) {
+      Array.from(
+        document.querySelectorAll(`.${elements.resultLink}`) || [],
+      ).forEach(el => el.classList.remove(elements.resultLinkActive));
 
+      document
+        .querySelector(`a[href*="${id}"]`)
+        .classList.add(elements.resultLinkActive);
+    }
+  },
   /**
    * clearing
    */
@@ -98,4 +106,4 @@ export default ((elements, buttons) => ({
 
     buttons.render(page, recipes.length, resPerPage);
   },
-}))(elements, buttons);
+}))(document, elements, buttons);

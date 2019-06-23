@@ -7,7 +7,7 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 import searchView from './views/searchView';
 import recipeView from './views/recipeView';
-import { elements, elementStrings, loader } from './views/base';
+import { elements, loader } from './views/base';
 
 // basic state managment object
 const state = {};
@@ -55,13 +55,23 @@ elements.searchResPages.addEventListener('click', el => {
     const id = window.location.hash.replace('#', '');
     if (id) {
       const recipe = new Recipe(id);
-
+      recipeView.clear();
       try {
+        loader.init(elements.recipeItem, 'loader');
+        loader.renderLoader();
+        searchView.highlightSelected(
+          state.results > 0 ? window.location.hash : null,
+        );
+
         await recipe.fetchRecipe(id);
-        recipeView.clear();
-        recipeView.render(recipe.item);
+        state.item = recipe.item;
+
+        loader.clearLoader();
+        recipeView.render(state.item);
       } catch (error) {
         throw new Error(error);
+      } finally {
+        loader.clearLoader();
       }
     }
   }),
