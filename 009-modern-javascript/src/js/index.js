@@ -23,9 +23,10 @@ const controlSearch = async search => {
   loader.init(elements.searchRes, 'loader');
   loader.renderLoader();
   await search.getResults();
+  state.results = search.results;
   loader.clearLoader();
 
-  return search.results;
+  return state.results;
 };
 
 // events
@@ -34,7 +35,15 @@ document.querySelector('.search').addEventListener('submit', async e => {
   const searchQuery = searchView.getInput();
 
   if (searchQuery) {
-    const results = await controlSearch(new Search(searchQuery));
-    searchView.renderResults(results);
+    await controlSearch(new Search(searchQuery));
+    searchView.renderResults(state.results);
+  }
+});
+
+elements.searchResPages.addEventListener('click', el => {
+  const button = el.target.closest('.btn-inline');
+  if (button) {
+    searchView.clearResults();
+    searchView.renderResults(state.results, parseInt(button.dataset.goto));
   }
 });

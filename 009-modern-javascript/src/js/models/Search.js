@@ -14,7 +14,7 @@ const mockRequest = _data => async () => {
   const res = new Promise(resolve => {
     setTimeout(async () => {
       return resolve(_data);
-    }, 2000);
+    }, 500);
   });
 
   return res;
@@ -59,7 +59,6 @@ export default class Search {
     try {
       this.results = await request(true, data)(this.query);
     } catch (error) {
-      console.log(error);
       if (error.response) {
         throw new Error(error.data);
       }
