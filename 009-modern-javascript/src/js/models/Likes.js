@@ -1,3 +1,5 @@
+const storageKey = '__complete_recipte_app_js_likes';
+
 export default class Likes {
   constructor() {
     this.likes = [];
@@ -20,5 +22,12 @@ export default class Likes {
 
   total() {
     return this.likes.length;
+  }
+
+  persistLikes() {
+    localStorage.setItem(storageKey, JSON.stringify(this.likes));
+  }
+  readStorage() {
+    this.likes = JSON.parse(localStorage.getItem(storageKey)) || [];
   }
 }

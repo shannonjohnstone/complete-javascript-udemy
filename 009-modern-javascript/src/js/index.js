@@ -54,10 +54,17 @@ elements.searchResPages.addEventListener('click', el => {
   }
 });
 
+window.addEventListener('load', () => {
+  state.like = new Likes();
+  state.like.readStorage();
+  likeView.toggleLikeMenu(state.like.total());
+  state.like.likes.forEach(likeView.render);
+});
+
 ['hashchange', 'load'].forEach(event =>
   window.addEventListener(event, async () => {
     const id = window.location.hash.replace('#', '');
-    likeView.toggleLikeMenu(state.like && state.like.total());
+    // likeView.toggleLikeMenu(state.like && state.like.total());
     if (id) {
       const recipe = new Recipe(id);
       recipeView.clear();
@@ -95,10 +102,12 @@ const controlLike = () => {
   if (!state.like.isLiked(id)) {
     state.like.add(state.item);
     likeView.toggleLike(true);
+    state.like.persistLikes();
     likeView.render(state.item);
   } else {
     state.like.delete(id);
     likeView.toggleLike(false);
+    state.like.persistLikes();
     likeView.remove(state.item.id);
   }
   likeView.toggleLikeMenu(state.like.total());
