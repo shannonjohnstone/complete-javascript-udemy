@@ -57,6 +57,7 @@ elements.searchResPages.addEventListener('click', el => {
 ['hashchange', 'load'].forEach(event =>
   window.addEventListener(event, async () => {
     const id = window.location.hash.replace('#', '');
+    likeView.toggleLikeMenu(state.like && state.like.total());
     if (id) {
       const recipe = new Recipe(id);
       recipeView.clear();
@@ -70,7 +71,7 @@ elements.searchResPages.addEventListener('click', el => {
         state.item.id = id;
 
         loader.clearLoader();
-        recipeView.render(state.item);
+        recipeView.render(state.item, state.like && state.like.isLiked(id));
       } catch (error) {
         throw new Error(error);
       } finally {
@@ -93,14 +94,14 @@ const controlLike = () => {
 
   if (!state.like.isLiked(id)) {
     state.like.add(state.item);
-    recipeView.render(state.item, true);
+    likeView.toggleLike(true);
     likeView.render(state.item);
   } else {
     state.like.delete(id);
-    recipeView.render(state.item, false);
+    likeView.toggleLike(false);
     likeView.remove(state.item.id);
   }
-  console.log(state.like.likes, 'likes');
+  likeView.toggleLikeMenu(state.like.total());
 };
 
 elements.shopping.addEventListener('click', el => {

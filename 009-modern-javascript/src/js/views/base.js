@@ -13,6 +13,7 @@ export const elements = {
   recipeBtn: document.querySelector('.recipe__btn--add'),
   shopping: document.querySelector('.shopping__list'),
   likeList: document.querySelector('.likes__list'),
+  likesMenu: document.querySelector('.likes'),
 };
 
 export const loader = (() => {
