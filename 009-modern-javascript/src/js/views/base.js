@@ -10,6 +10,8 @@ export const elements = {
   resultLinkActive: document.querySelector('.results__link--active'),
   recipeItem: document.querySelector('.recipe'),
   ingredientList: document.querySelector('.recipe__ingredient-list'),
+  recipeBtn: document.querySelector('.recipe__btn--add'),
+  shopping: document.querySelector('.shopping__list'),
 };
 
 export const loader = (() => {

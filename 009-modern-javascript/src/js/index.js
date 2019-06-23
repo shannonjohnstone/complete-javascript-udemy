@@ -5,8 +5,10 @@
 
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import List from './models/List';
 import searchView from './views/searchView';
 import recipeView from './views/recipeView';
+import listView from './views/listView';
 import { elements, loader } from './views/base';
 
 // basic state managment object
@@ -76,3 +78,25 @@ elements.searchResPages.addEventListener('click', el => {
     }
   }),
 );
+
+const controlList = () => {
+  if (!state.list) state.list = new List();
+
+  state.item.ingredients.map(state.list.addItem.bind(state.list));
+  state.list.items.forEach(listView.render);
+};
+
+elements.shopping.addEventListener('click', el => {
+  const id = el.target.closest('.shopping__item').dataset.itemid;
+
+  if (el.target.matches('.shopping__delete, .shopping__delete *')) {
+    state.list.deleteItem(id);
+    listView.deleteItem(id);
+  }
+});
+
+elements.recipeItem.addEventListener('click', el => {
+  if (el.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+    controlList();
+  }
+});
