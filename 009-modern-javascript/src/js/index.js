@@ -9,7 +9,9 @@ import List from './models/List';
 import searchView from './views/searchView';
 import recipeView from './views/recipeView';
 import listView from './views/listView';
+import likeView from './views/likeView';
 import { elements, loader } from './views/base';
+import Likes from './models/Likes';
 
 // basic state managment object
 const state = {};
@@ -61,12 +63,11 @@ elements.searchResPages.addEventListener('click', el => {
       try {
         loader.init(elements.recipeItem, 'loader');
         loader.renderLoader();
-        searchView.highlightSelected(
-          state.results > 0 ? window.location.hash : null,
-        );
+        searchView.highlightSelected(state.results > 0 ? id : null);
 
         await recipe.fetchRecipe(id);
         state.item = recipe.item;
+        state.item.id = id;
 
         loader.clearLoader();
         recipeView.render(state.item);
@@ -86,6 +87,22 @@ const controlList = () => {
   state.list.items.forEach(listView.render);
 };
 
+const controlLike = () => {
+  if (!state.like) state.like = new Likes();
+  const id = state.item.id;
+
+  if (!state.like.isLiked(id)) {
+    state.like.add(state.item);
+    recipeView.render(state.item, true);
+    likeView.render(state.item);
+  } else {
+    state.like.delete(id);
+    recipeView.render(state.item, false);
+    likeView.remove(state.item.id);
+  }
+  console.log(state.like.likes, 'likes');
+};
+
 elements.shopping.addEventListener('click', el => {
   const id = el.target.closest('.shopping__item').dataset.itemid;
 
@@ -98,5 +115,7 @@ elements.shopping.addEventListener('click', el => {
 elements.recipeItem.addEventListener('click', el => {
   if (el.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
     controlList();
+  } else if (el.target.matches('.recipe__love, .recipe__love *')) {
+    controlLike();
   }
 });

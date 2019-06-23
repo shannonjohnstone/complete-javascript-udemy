@@ -76,7 +76,7 @@ export default ((document, elements, buttons) => ({
       ).forEach(el => el.classList.remove(elements.resultLinkActive));
 
       document
-        .querySelector(`a[href*="${id}"]`)
+        .querySelector(`a[href*="#${id}"]`)
         .classList.add(elements.resultLinkActive);
     }
   },

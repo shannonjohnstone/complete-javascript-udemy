@@ -8,8 +8,8 @@ export default class Recipe {
     try {
       const res = await API.fetchRecipe(this.id);
       this.item.title = res.data.recipe.title; // wrong
-      this.item.author = res.data.recipe.author;
-      this.item.img = res.data.recipe.img;
+      this.item.publisher = res.data.recipe.publisher;
+      this.item.image_url = res.data.recipe.image_url;
       this.item.url = res.data.recipe.url;
       this.item.ingredients = this.parseIngredients(
         res.data.recipe.ingredients || [],

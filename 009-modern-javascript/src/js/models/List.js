@@ -3,7 +3,6 @@ import uniqid from 'uniqid';
 export default class List {
   constructor() {
     this.items = [];
-    console.log(this, 'constructor');
   }
 
   addItem({ count, unit, ingredient }) {

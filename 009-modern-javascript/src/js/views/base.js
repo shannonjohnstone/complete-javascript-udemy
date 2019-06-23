@@ -12,6 +12,7 @@ export const elements = {
   ingredientList: document.querySelector('.recipe__ingredient-list'),
   recipeBtn: document.querySelector('.recipe__btn--add'),
   shopping: document.querySelector('.shopping__list'),
+  likeList: document.querySelector('.likes__list'),
 };
 
 export const loader = (() => {

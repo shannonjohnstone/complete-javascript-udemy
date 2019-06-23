@@ -28,7 +28,7 @@ export default (elements => {
     clear: () => {
       elements.recipeItem.innerHTML = '';
     },
-    render: recipe => {
+    render: (recipe, liked) => {
       const markup = `
         <figure class="recipe__fig">
             <img src="img/test-1.jpg" alt="Tomato" class="recipe__img">
@@ -67,7 +67,9 @@ export default (elements => {
             </div>
             <button class="recipe__love">
                 <svg class="header__likes">
-                    <use href="img/icons.svg#icon-heart-outlined"></use>
+                    <use href="img/icons.svg#${
+                      liked ? 'icon-heart' : 'icon-heart-outlined'
+                    }"></use>
                 </svg>
             </button>
         </div>
